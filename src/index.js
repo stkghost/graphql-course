@@ -57,6 +57,7 @@ const typeDefs = /* GraphQL */`
   }
 
   type User {
+    id: String!
     name: String!
     age: Int!
     posts: [Post!]!
@@ -69,11 +70,18 @@ const resolvers = {
       if (!args.query) {
         return posts
       }
-      return posts.filter(user => {
+      return users.filter(user => {
+        return user.name.toLowerCase().includes(args.query.toLowerCase())
+      })
+    },
+    users(parent, args, ctx, info) {
+      if (!args.query) {
+        return users
+      }
+      return users.filter(user => {
         return user.title.toLowerCase().includes(args.query.toLowerCase())
       })
-
-    }
+    },
   },
   Post: {
     author(parent, a, c, i) {
@@ -85,7 +93,9 @@ const resolvers = {
   User: {
     posts(parent, args, ctx, info) {
       return posts.filter(post => {
-        return post.author === parent.id
+        const data = post.author === parent.id
+        console.log(data)
+        return data
       })
     }
   }
